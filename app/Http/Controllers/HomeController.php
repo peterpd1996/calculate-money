@@ -47,7 +47,7 @@ class HomeController extends Controller
         array_multisort($price, $mode, $array);
         return $array;
     }
-    
+
     public function calculateMoney($moneys)
     {
         $result = "";
@@ -93,7 +93,7 @@ class HomeController extends Controller
 
             }
         }
-        return $reslut;
+        return $result;
     }
 
 }

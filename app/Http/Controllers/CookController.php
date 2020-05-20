@@ -13,6 +13,7 @@ class CookController extends Controller
     {
     	$user = auth()->user();
     	$whosEat = $request->who_eat;
+    	array_push( $whosEat, $user->id);
     	$totalPeopleEat = count($whosEat);
     	$price = $request->price;
     	$moneyPerson = round($price/$totalPeopleEat);
@@ -29,7 +30,10 @@ class CookController extends Controller
     			'money_one_person' => $moneyPerson
                 ]);
     	}
-    	Meal::insert($peopleEat);
+    	$result = Meal::insert($peopleEat);
+    	return response()->json([
+    	    'total'=> $result
+        ]);
 
     }
 

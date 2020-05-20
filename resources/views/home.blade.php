@@ -11,33 +11,32 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <!-- Modal body -->
-      <form id="createCook">
-      <div class="modal-body">
-         <div class="form-group">
-            <label for="exampleInputPassword1">Total</label>
-            <input type="number" id="price" class="form-control" id="exampleInputPassword1" placeholder="money">
+      <form id="createResource" action="">
+          @csrf
+          <div class="modal-body">
+             <div class="form-group">
+                <label for="exampleInputPassword1">Total</label>
+                <input type="number" id="price" class="form-control" name="money"  placeholder="money">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputPassword1">Note</label>
+                <input type="text" id="note" class="form-control" name ="note" placeholder="note">
+              </div>
+              @foreach($users as $user)
+              <div class="form-check">
+                <input class=" check-box" type="checkbox" name ="check" value="{{ $user->id }}">
+                <label class="form-check-label " for="defaultCheck1">
+                  {{ $user->name }}
+                </label>
+              </div>
+              @endforeach
           </div>
-          <div class="form-group">
-            <label for="exampleInputPassword1">Note</label>
-            <input type="text" id="note" class="form-control" id="exampleInputPassword1" placeholder="note">
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-info" data-dismiss="modal" id="addNewCook">Add</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
           </div>
-          @foreach($users as $user)
-          <div class="form-check">
-            <input class=" check-box" type="checkbox" value="{{ $user->id }}">
-            <label class="form-check-label " for="defaultCheck1">
-              {{ $user->name }}
-            </label>
-          </div>
-          @endforeach
-      </div>
       </form>
-
-      <!-- Modal footer -->
-      <div class="modal-footer">
-        <button type="button" class="btn btn-info" data-dismiss="modal" id="addNewCook">Add</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-      </div>
-
     </div>
   </div>
 </div>
@@ -89,24 +88,26 @@
       headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
-      }); 
+      });
        let id = [];
-       $('#addNewCook').click(function(){
-         $('.check-box:checked').each(function () {
-                id.push($(this).val());
-            });
-        let price = $('#price').val();
-        let note = $('#note').val();
-        let data = {who_eat:id,price:price,note:note};
-        let url = '/cook/store';
-        callApi(data, url, "post")
-        .done(responve => {
-          $('#createCook')[0].reset();
-              console.log(responve);
-        })
-        .fail(error => {
-                    console.log(error);
-                })
+       $('#addNewCook').click(function(event){
+           event.preventDefault();
+           $('.check-box:checked').each(function () {
+               id.push($(this).val());
+           });
+           let price = $('#price').val();
+           let note = $('#note').val();
+           let data = {who_eat:id,price:price,note:note};
+           let url = '/cook/store';
+
+           callApi(data, url, "post")
+               .done(response => {
+                   $("#createResource")[0].reset();
+                   console.log(response);
+               })
+               .fail(error => {
+                   console.log(error);
+               })
        }) ;
     function callApi(data, url, type, dataType = 'json') {
     return $.ajax({
